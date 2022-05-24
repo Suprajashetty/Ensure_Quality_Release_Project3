@@ -19,5 +19,9 @@ stages:
       inputs:
         version: '1.2.1'
       displayName: "Install Terraform 1.2.1"
-      
-
+    - task: InstallSSHKey@0
+      displayName: Security Access
+      inputs:
+          knownHostsEntry: "default"
+          sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"
+          sshKeySecureFile: "id_rsa"
