@@ -1,9 +1,8 @@
-<<<<<<< HEAD
 name: Azure Pipelines
 trigger: 
   - main
 pool:
-- name: myAgentPool
+  name: myAgentPool
 variables:
   python.version: '3.7.6'
 stages:
@@ -12,56 +11,64 @@ stages:
   jobs:
   - job: BuildJob
     pool:
-      vmImage: $(vmImageName)
+      name: myAgentPool
     steps:
     #Needed for terraform VM deployment
-    - task: TerraformInstaller@0
-      displayName: "Install Terraform $(tf_version)"
+   
+    - task: TerraformTool@0
       inputs:
-        terraformVersion: "$(tf_version)"
-
+        version: '1.2.1'
+      displayName: "Install Terraform 1.2.1"
     - task: InstallSSHKey@0
-      name: udacity_public_key
       displayName: Security Access
       inputs:
-        knownHostsEntry: "default"
-        sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"
-        sshKeySecureFile: id_rsa
-   
-   # Terraform init, plan, validate, apply commands
-    - task: TerraformTaskV1@0 
+          knownHostsEntry: "|1|oS0l5IxTazwrUIquN2/F8wW8Jl0=|KF7t6D3nhkBDimiOKeVNRrcVZfM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCBkFUhSi6cjSv6F1o/fIj48d6DQ9OaEABCl784rJxr3ba86gaN1DRowJfupowaOdgay6s59b2Jm9QZDs5e+HNY="
+          sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"
+          sshKeySecureFile: 'id_rsa'
+    - task: TerraformTaskV2@2 
       displayName: 'Initialize Terraform'
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         backendServiceArm: 'myserviceconnection12312'
         backendAzureRmResourceGroupName: 'Azuredevops'
         backendAzureRmStorageAccountName: 'storage12312'
         backendAzureRmContainerName: 'mycontainer123'
         backendAzureRmKey: 'terraform.tfstate'
-
     - task: TerraformTaskV1@0
       displayName: 'Validate Terraform'
       inputs:
         command: 'validate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test' 
-        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"'
-        environmentServiceNameAzureRM: $(azureServiceConnectionId)
-      
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test' 
+        environmentServiceNameAzureRM: myserviceconnection12312
     - task: TerraformTaskV1@0
       displayName: 'Plan Terraform'
       inputs:
         command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        commandOptions: '-var "public_key_path=$(/home/odl_user/.ssh/id_rsa.pub)"'
-        environmentServiceNameAzureRM: $(azureServiceConnectionId)
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"'
+        environmentServiceNameAzureRM: myserviceconnection12312
 
     - task: TerraformTaskV1@0
       displayName: 'Apply Terraform'
       inputs:
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        commandOptions: '-var "public_key_path=$(/home/odl_user/.ssh/id_rsa.pub)"'
-        environmentServiceNameAzureRM: $(azureServiceConnectionId)
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"'
+        environmentServiceNameAzureRM: myserviceconnection12312
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
+      inputs:
+        rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
 
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload FakeRestAPI Package'
+      artifact: drop-fakerestapi
+
+    - publish: automatedtesting/selenium/login.py
+      displayName: 'Upload UI Tests definition'
+      artifact: drop-ui-tests
