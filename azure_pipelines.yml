@@ -42,3 +42,16 @@ stages:
         command: 'validate'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test' 
         environmentServiceNameAzureRM: myserviceconnection12312
+    - task: TerraformTaskV1@0
+      displayName: 'Plan Terraform'
+      inputs:
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        environmentServiceNameAzureRM: $(azureServiceConnectionId)
+
+    - task: TerraformTaskV1@0
+      displayName: 'Apply Terraform'
+      inputs:
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        environmentServiceNameAzureRM: $(azureServiceConnectionId)
