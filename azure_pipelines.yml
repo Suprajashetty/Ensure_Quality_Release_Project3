@@ -20,13 +20,4 @@ stages:
         version: '1.2.1'
       displayName: "Install Terraform 1.2.1"
       
-    - task: InstallSSHKey@0
-      displayName: Security Access
-      inputs:
-        knownHostsEntry: "default"
-        sshKeySecureFile: id_rsa
-    -  task: Bash@3
-       inputs:
-        targetType: "inline"
-        script: |
-                ls /home/odl_user/.ssh/
+
