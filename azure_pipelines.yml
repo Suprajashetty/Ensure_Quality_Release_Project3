@@ -11,7 +11,7 @@ stages:
   jobs:
   - job: BuildJob
     pool:
-      vmImage: $(vmImageName)
+      name: myAgentPool
     steps:
     #Needed for terraform VM deployment
    
