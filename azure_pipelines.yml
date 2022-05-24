@@ -69,6 +69,6 @@ stages:
       displayName: 'Upload FakeRestAPI Package'
       artifact: drop-fakerestapi
 
-    - publish: selenium/login.py
+    - publish: automatedtesting/selenium/login.py
       displayName: 'Upload UI Tests definition'
       artifact: drop-ui-tests
