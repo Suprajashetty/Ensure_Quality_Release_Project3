@@ -89,6 +89,6 @@ stages:
               inputs:
                 azureSubscription: myserviceconnection12312
                 appType: 'webApp'
-                appName: '$(webAppName)'
+                appName: "${var.application_type}-${var.resource_type}"
                 package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
                 deploymentMethod: 'auto'
