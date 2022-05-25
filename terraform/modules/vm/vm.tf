@@ -20,7 +20,7 @@ resource "azurerm_linux_virtual_machine" "test" {
   network_interface_ids = [azurerm_network_interface.test.id]
   admin_ssh_key {
     username   = "AzureUser"
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK+X2YWPphJ4r7+JSBOoik9cUmSat/0+UrIcMR8DI3D37BqE/bCafmZ6i2fKpurQGDV7PdhpFFHY58S9M3/y4da2yrBKFxxXW32rXPaLmwdxfH5Kk8ew3DlUL4aNQYW6ZZKf3bszRLk/z2pifGWBifB+qanj2BrcsqFoPimIpqzc54iG6k8ak14sdh8ejssEnobyqRwxY9OspCd/FGBfPEsuln5ii43l7oVijD61L/aID0saRvU57od8HsNSkca8RFYPI84u2NzN8G+UBy1BCsuL7thKbtshPr3nXdeYZS6L4yGIYKFHfpx+CHmSnAlcqtCkVj3PBwGQMdqyQg++kR odl_user@cc-198878e9-86b8b85c85-4d7p7"
+    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDC+GDJIACIJ8LfQrlix4roP29pxj48blXcJ9QKGh9g3oS5IDTK+KuQWeNtq82XrXFWAwdi0we94LEdL8CaVRIr2FkaEmjZkT9A73jHzXEqFBjpYGPWAW6+vbIr3OXa5Vhkgo6CPqymrFB37l87rNoWytXTgdWB94ahfj0vjLLixzsayTBtYRY8/8vIwLvPaBgf2C3mxlvgMnO2d6WcwfXNWtLjlGvoSIbOEcEyP6ylkknKNOsQZyFBSdBTE/p0WmUUc9VjtV3xoc+LBAEFFMiop9cquru7TJ095YFM1HGDus/8zWQuLFXCsZGQU/iVK2IaoqeFI3lZMe86D+BAvxj1 odl_user@cc-aed5dc39-8669c9c64-6j27k"
 
     #file(var.public_key_path)
   }
