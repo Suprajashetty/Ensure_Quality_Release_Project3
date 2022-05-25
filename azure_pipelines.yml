@@ -89,6 +89,6 @@ stages:
               inputs:
                 azureSubscription: myserviceconnection12312
                 appType: 'webApp'
-                appName: 'azure-ensuring-quality-releases-app'
+                appName: '$(webAppName)'
                 package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
                 deploymentMethod: 'auto'
