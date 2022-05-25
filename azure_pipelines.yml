@@ -15,7 +15,7 @@ stages:
     steps:
     #Needed for terraform VM deployment
    
-    - task: TerraformTool@0
+    - task: TerraformInstaller@0
       inputs:
         version: '1.2.1'
       displayName: "Install Terraform 1.2.1"
