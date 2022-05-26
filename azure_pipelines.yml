@@ -92,40 +92,23 @@ stages:
                 appName: 'test-app-AppService'
                 package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
                 deploymentMethod: 'auto'
-- stage: IntegrationTests
-  displayName: Integration Tests
+- stage: postDeployment
+  displayName: 'Post-Deployment'
   jobs:
-      - job: PostmanTests
-        displayName: PostmanTests
-        steps:
-          - task: NodeTool@0
-            displayName: Install Node v16.X
-            inputs:
-              versionSpec: "16.x"
-          - task: CmdLine@2
-            displayName: Install Newman
-            inputs:
-              script: "npm install newman"
-              workingDirectory: "$(System.DefaultWorkingDirectory)"
-          - task: CmdLine@2
-            displayName: Run Regression Tests
-            inputs:
-              script: "newman run automatedtesting/postman/Regressiontesting.json -e automatedtesting/postman/DataValidation_environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/Results/RegressionTests.xml"
-              workingDirectory: "$(System.DefaultWorkingDirectory)"
-            continueOnError: true
-          - task: CmdLine@2
-            displayName: Run Data Validation Tests
-            inputs:
-              script: "newman run automatedtesting/postman/DataValidation.json -e automatedtesting/postman/DataValidation_environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/Results/DataValidationTests.xml"
-              workingDirectory: "$(System.DefaultWorkingDirectory)"
-            continueOnError: true
-          - task: CmdLine@2
-            inputs:
-              script: "ls"
-              workingDirectory: "$(System.DefaultWorkingDirectory)"
-          - task: PublishTestResults@2
-            displayName: Publish Test Reports
-            condition: always()
-            inputs:
-              testResultsFormat: "JUnit"
-              testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
+  - job: runNewman
+    displayName: 'Run Newman/Postman data validation tests'    
+    pool:
+      name: myAgentPool
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+              sudo npm install -g newman
+              sudo npm install -g newman-reporter-junitfull
+              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/Regressiontesting.json" -r cli,junitfull --reporter-junitfull-export result-data-validation-test.xml              
+              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation.json" -r cli,junitfull --reporter-junitfull-export result-data-regression-test.xml
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/*.xml'
