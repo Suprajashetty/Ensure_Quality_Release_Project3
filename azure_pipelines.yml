@@ -92,8 +92,9 @@ stages:
                 appName: 'test-app-AppService'
                 package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
                 deploymentMethod: 'auto'
-- stage: postDeployment
-  displayName: 'Post-Deployment'
+
+- stage: Testing
+  displayName: 'Integration testing'
   jobs:
   - job: runNewman
     displayName: 'Run Newman/Postman data validation tests'    
@@ -112,3 +113,39 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/*.xml'
+      
+  - job: publishSelenium
+    displayName: 'Publish Selenium'
+    pool:
+      name: 'myAgentPool'
+    steps:
+    - publish: $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py
+      artifact: seleniumFile
+  - deployment: seleniumOnVMDeploy
+    pool:
+      name: 'myAgentPool'
+    displayName: 'Install and run Selenium on VM'
+    dependsOn: publishSelenium
+    environment:
+      name:  'TEST'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: seleniumFile
+          - task: Bash@3
+            displayName: 'Run Selenium functional tests'
+            inputs:
+              targetType: 'inline'
+              script: |
+                #!/bin/bash
+                sudo mkdir -p /var/log/selenium/
+                sudo touch /var/log/selenium/selenium.log
+                sudo chmod 777 /var/log/selenium/selenium.log
+                sudo apt-get update -y
+                sudo apt-get install -y chromium-chromedriver chromium-browser
+                curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
+                python3 get-pip.py
+                pip3 install selenium
+                python3 $(Pipeline.Workspace)/seleniumFile/selenium-tests.py 2>&1 | tee -a /var/log/selenium/selenium.log
