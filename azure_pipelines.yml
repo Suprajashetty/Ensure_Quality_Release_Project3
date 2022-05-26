@@ -92,3 +92,52 @@ stages:
                 appName: 'test-app-AppService'
                 package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
                 deploymentMethod: 'auto'
+- stage: Tests
+  jobs:
+
+  - job: Integration
+    displayName: 'Integration Tests'
+    pool:
+      name: myAgentPool
+    steps:
+
+            - task: Bash@3
+              displayName: 'Install Postman & Newman'
+              inputs:
+                targetType: 'inline'
+                script: |
+                  #! /bin/bash
+                  sudo snap install postman
+                  sudo npm install -g newman
+                  sudo npm install newman-reporter-junitfull -g      
+            
+            - task: Bash@3
+              displayName: 'Regression Tests'
+              inputs:
+                workingDirectory: 'postman'
+                targetType: 'inline'
+                script: |
+                  #! /bin/bash
+                  newman run Regression testing.json \
+                    -e DataValidation_environment.json \
+                    -r cli,junitfull \
+                    --reporter-junitfull-export JUnitReportRegression.xml
+            
+            - task: Bash@3
+              displayName: 'Data Validation Tests'
+              inputs:
+                workingDirectory: 'postman'
+                targetType: 'inline'
+                script: |
+                  #! /bin/bash
+                  newman run Data Validation.json \
+                    -e DataValidation_environment.json \
+                    -r cli,junitfull \
+                    --reporter-junitfull-export JUnitReportValidation.xml
+            
+            - task: PublishTestResults@2
+              inputs:
+                testResultsFormat: 'JUnit'
+                testResultsFiles: '**/JUnitReport*.xml'
+                testRunTitle: 'Publish test results'
+                searchFolder: 'automatedtesting/postman'
