@@ -108,6 +108,7 @@ stages:
                 script: |
                   #! /bin/bash
                   sudo snap install postman
+                  sudo apt-get install npm
                   sudo npm install -g newman
                   sudo npm install newman-reporter-junitfull -g      
             
