@@ -12,11 +12,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}api/users",
+					"raw": "{{url}}/api/users",
 					"host": [
-						"{{url}}api"
+						"{{url}}"
 					],
 					"path": [
+						"api",
 						"users"
 					]
 				}
@@ -38,11 +39,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}api/users",
+					"raw": "{{url}}/api/users",
 					"host": [
-						"{{url}}api"
+						"{{url}}"
 					],
 					"path": [
+						"api",
 						"users"
 					]
 				}
@@ -69,11 +71,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}api/users",
+					"raw": "{{url}}/api/users",
 					"host": [
-						"{{url}}api"
+						"{{url}}"
 					],
 					"path": [
+						"api",
 						"users"
 					]
 				}
@@ -102,11 +105,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}api/users/2",
+					"raw": "{{url}}/api/users/2",
 					"host": [
-						"{{url}}api"
+						"{{url}}"
 					],
 					"path": [
+						"api",
 						"users",
 						"2"
 					]
@@ -142,11 +146,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}api/users",
+					"raw": "{{url}}/api/users",
 					"host": [
-						"{{url}}api"
+						"{{url}}"
 					],
 					"path": [
+						"api",
 						"users"
 					]
 				}
