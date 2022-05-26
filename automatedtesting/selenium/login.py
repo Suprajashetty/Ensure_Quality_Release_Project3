@@ -11,7 +11,7 @@ Locators = {'username_id': 'user-name', 'password_id': 'password', 'login_btn': 
 def login(user, password):
     print('Starting the browser...')
     options = ChromeOptions()
-    #options.add_argument("--headless")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     print('Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
