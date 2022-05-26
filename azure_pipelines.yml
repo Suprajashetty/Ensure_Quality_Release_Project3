@@ -92,49 +92,61 @@ stages:
                 appName: 'test-app-AppService'
                 package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
                 deploymentMethod: 'auto'
+  - deployment: VMDeploy
+    displayName: Deploy a VM
+    environment:
+          name: "NEWTEST"
+          resourceType: VirtualMachine
+    strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: |
+                    pwd
+                    python3 -V
+                    pip3 -V
+                    # unzip
+                    /usr/bin/chromium-browser --version
+                    /usr/bin/chromedriver --version
+                    # pip3 install selenium
+                    python3 -c "print('Selenium Version:', selenium.__version__)"
+                  displayName: Configure selenium and VM
 - stage: Tests
   jobs:
-
-  - job: Integration
-    displayName: 'Integration Tests'
-    pool:
-      name: myAgentPool
-    steps:
-            - task: NodeTool@0
-              displayName: Install Node v16.X
-              inputs:
-                versionSpec: "16.x"
-            - task: Bash@3
-              displayName: 'Install Postman & Newman'
-              inputs:
-                targetType: 'inline'
-                script: |
-                  #! /bin/bash
-                  sudo apt-get install npm
-                  sudo npm install newman
-                        
-            
-            - task: Bash@3
-              displayName: 'Regression Tests'
-              inputs:
-                script: "newman run automatedtesting/postman/Regressiontesting.json -e automatedtesting/postman/DataValidation_environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/Results/RegressionTests.xml"
-                workingDirectory: "$(System.DefaultWorkingDirectory)"
-              continueOnError: true
-            
-            - task: Bash@3
-              displayName: 'Data Validation Tests'
-              inputs:
-                script: "newman run automatedtesting/postman/DataValidation.json -e automatedtesting/postman/DataValidation_environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/Results/DataValidationTests.xml"
-                workingDirectory: "$(System.DefaultWorkingDirectory)"
-              continueOnError: true
-            
-            - task: CmdLine@2
-              inputs:
-                script: "ls"
-                workingDirectory: "$(System.DefaultWorkingDirectory)"
-            - task: PublishTestResults@2
-              displayName: Publish Test Reports
-              condition: always()
-              inputs:
-                testResultsFormat: "JUnit"
-                testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
+      - deployment: test_vm
+        displayName: Tests on VM
+        environment:
+          name: "TEST"
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: |
+                    pwd
+                    cd $(Pipeline.Workspace)/drop-selenium
+                    find . -type f ! -name '$(Build.BuildId)-selenium.zip' -delete  
+                    unzip -o $(Build.BuildId)-selenium.zip
+                    pwd
+                    # add sudo here
+                    sudo mkdir -p /var/log/selenium
+                    sudo chmod 775 /var/log/selenium
+                    sudo python3 login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log.txt
+                    sudo chmod 775 /var/log/selenium/selenium-test.log.txt
+                    echo "Display /var/log/selenium/selenium-test.log.txt"
+                    sudo cat /var/log/selenium/selenium-test.log.txt
+                    echo "-------------------------------------------------"
+                    ls -la
+                    # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
+                    cd $(System.DefaultWorkingDirectory)
+                    mkdir -p log/selenium
+                    sudo cp /var/log/selenium/selenium-test.log.txt log/selenium/selenium-test.log.txt
+                    cd log/selenium
+                    pwd
+                    ls -la
+                  displayName: Selenium tests
+                - task: PublishPipelineArtifact@1
+                  displayName: Publish selenium logs
+                  inputs:
+                    targetPath: "$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log.txt"
+                    artifactName: "drop-selenium-logs"
