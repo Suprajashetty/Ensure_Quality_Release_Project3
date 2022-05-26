@@ -104,8 +104,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-              sudo npm install -g newman
-              sudo npm install -g newman-reporter-junitfull
+              npm install -g newman
+              npm install -g newman-reporter-junitfull
               newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/Regressiontesting.json" -r cli,junitfull --reporter-junitfull-export result-data-validation-test.xml              
               newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation.json" -r cli,junitfull --reporter-junitfull-export result-data-regression-test.xml
     - task: PublishTestResults@2
