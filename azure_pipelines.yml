@@ -100,7 +100,10 @@ stages:
     pool:
       name: myAgentPool
     steps:
-
+            - task: NodeTool@0
+              displayName: Install Node v16.X
+              inputs:
+                versionSpec: "16.x"
             - task: Bash@3
               displayName: 'Install Postman & Newman'
               inputs:
@@ -109,8 +112,8 @@ stages:
                   #! /bin/bash
                   sudo snap install postman
                   sudo apt-get install npm
-                  sudo npm install -g newman
-                  sudo npm install newman-reporter-junitfull -g      
+                  sudo npm install newman
+                        
             
             - task: Bash@3
               displayName: 'Regression Tests'
