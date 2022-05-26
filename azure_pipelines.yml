@@ -144,7 +144,20 @@ stages:
                 sudo touch /var/log/selenium/selenium.log
                 sudo chmod 777 /var/log/selenium/selenium.log
                 sudo apt-get update -y
-                sudo apt-get install -y chromium-chromedriver chromium-browser
+                sudo apt-get install -y chromium-browser
+                FILE=chromedriver_linux64.zip
+                if [ -f "$FILE" ]; then
+                    echo "$FILE exists."
+                else
+                    wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+                fi
+                # install chrome driver
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver /usr/bin/chromedriver
+                sudo chown root:root /usr/bin/chromedriver
+                sudo chmod +x /usr/bin/chromedriver
+                chromium-browser -version
+                chromedriver --version
                 curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
                 python3 get-pip.py
                 pip3 install selenium
