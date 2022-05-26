@@ -110,7 +110,6 @@ stages:
                 targetType: 'inline'
                 script: |
                   #! /bin/bash
-                  sudo snap install postman
                   sudo apt-get install npm
                   sudo npm install newman
                         
