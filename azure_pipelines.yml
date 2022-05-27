@@ -105,8 +105,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-              npm install -g newman
-              npm install -g newman-reporter-junitfull
+              sudo apt install npm
+              sudo npm install -g newman
+              sudo npm install -g newman-reporter-junitfull
               newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/Regressiontesting.json" -r cli,junitfull --reporter-junitfull-export result-data-validation-test.xml              
               newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidation.json" -r cli,junitfull --reporter-junitfull-export result-data-regression-test.xml
     - task: PublishTestResults@2
@@ -162,3 +163,28 @@ stages:
                 python3 get-pip.py
                 pip3 install selenium
                 python3 $(Pipeline.Workspace)/seleniumFile/login.py 2>&1 | tee -a /var/log/selenium/selenium.log
+
+- stage: JMeterTests
+  displayName: JMeter Tests
+  jobs:
+      - job: JMeterTests
+        displayName: JMeterTests
+        steps:
+          - task: JMeterInstaller@0
+            inputs:
+              jmeterVersion: "5.2.1"
+          - task: Bash@3
+            displayName: EnduranceTest
+            inputs:
+              targetType: "inline"
+              script: "jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/report/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport"
+          - task: Bash@3
+            displayName: StressTest
+            inputs:
+              targetType: "inline"
+              script: "jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/report/stressresults.jtl -e -o automatedtesting/jmeter/stressreport"
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: "automatedtesting/jmeter"
+              ArtifactName: "jmeter"
+              publishLocation: "Container"
