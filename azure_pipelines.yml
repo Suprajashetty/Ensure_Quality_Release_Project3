@@ -154,9 +154,9 @@ stages:
                 fi
                 # install chrome driver
                 unzip chromedriver_linux64.zip
-                sudo mv chromedriver /usr/bin/chromedriver
-                sudo chown root:root /usr/bin/chromedriver
-                sudo chmod +x /usr/bin/chromedriver
+                sudo mv chromedriver /home/devopsagent/myagent/_work/1/seleniumFile
+                sudo chown root:root /home/devopsagent/myagent/_work/1/seleniumFile
+                sudo chmod +x /home/devopsagent/myagent/_work/1/seleniumFile
                 chromium-browser -version
                 chromedriver --version
                 curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
@@ -172,7 +172,7 @@ stages:
         steps:
           - task: JMeterInstaller@0
             inputs:
-              jmeterVersion: "5.2.1"
+              jmeterVersion: "5.4.3"
           - task: Bash@3
             displayName: EnduranceTest
             inputs:
