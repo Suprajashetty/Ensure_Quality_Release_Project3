@@ -22,8 +22,8 @@ stages:
     - task: InstallSSHKey@0
       displayName: Security Access
       inputs:
-          knownHostsEntry: "|1|DCBjs3U2U2gqgFNSmqRRJYNmW/E=|S7Ynar5sOJ4JZbi9/GwGfGFoH2I= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBK/MZftqSUh+t15wKJSEbU066s+50hOKwbhm0obMzsqjQkj0UIZoNgQ4fSG1jJVIkVufkWW+41uwNZrqfW65Vk0="
-          sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDf6GlXttxn6GQthm3uOL4Z9UNFFTJTGXIKSfHvVVZx/OH4ZEVoYOOfvc1uTFDp4vMRFYl8FGvaN2hLUk0wbHDWI+Z8640OoKm2yfbavR9uF1K0Dgn/UhdrBS8qR0uQJptnBJfm/05IKpIMRvJBveDWgvqd9wlMr1RrxPsg6bQaJL+Qy+NKalfOLlCgxLP6npFt58h+URQnMVPRl3eO87HDRmREDsZEVM0H4GFDYJV3Z9j9pVWMaFlBPlAxC9JDFIpXybrWIGETJXe4yJr1gXVNZ5JcHzQpsZb9GhYXu2DhTN0HBxsah/z/naq7GJ16frPp4gY3YEFjLVVUPLvh7wgX odl_user@cc-ba677cc2-86464c7797-9tpvc"
+          knownHostsEntry: "|1|XxJbuWzRVIh+OrHj+xvOd8L5/2Q=|FXoOZtQ/kFEWRiq6DeBDF8Z3wOk= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJs5wSSJyP2hjS5xQwe/ODo0GFUrgqENJTkVf33MD6x/GWFb0yRChQ7k9FoiMmSjTHUf9DxOH/AI7Sd2Nw2A2uY="
+          sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQxQD83QQsrYoCc45LtgjhysHvQaC60ieE8UXPBtNFxNiujahjoWFl7VkK51kTrpuA5t+yKaUsdFSi+oSUvdEDClZH/M8J7OQ2Me0YptfbnAsPP4GcTEgthDFTI4iIwyBViZFXp7I/F+DZ/8g5o/z4am8EQP1MrumpwP0tzrt0BDISwjV43TLk3qmFTUUi2F2ylTA1SyJLYowFGZlnULD4vhnoEFQnbW0BZ5D32CSNOBM1kh5pA9ZB07l3MI65W7LY1nzQERYo0lIA0Utlkm8mexMw8F4ehYIWLOHslW4bWwW0n1XNMvt9qi4j4v+39ccsnFPZG5nmHw0R6AWaQNBH odl_user@cc-a7d05785-75fdfd5d54-prnn8"
           sshKeySecureFile: 'id_rsa'
     - task: TerraformTaskV2@2 
       displayName: 'Initialize Terraform'
@@ -47,7 +47,7 @@ stages:
       inputs:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDf6GlXttxn6GQthm3uOL4Z9UNFFTJTGXIKSfHvVVZx/OH4ZEVoYOOfvc1uTFDp4vMRFYl8FGvaN2hLUk0wbHDWI+Z8640OoKm2yfbavR9uF1K0Dgn/UhdrBS8qR0uQJptnBJfm/05IKpIMRvJBveDWgvqd9wlMr1RrxPsg6bQaJL+Qy+NKalfOLlCgxLP6npFt58h+URQnMVPRl3eO87HDRmREDsZEVM0H4GFDYJV3Z9j9pVWMaFlBPlAxC9JDFIpXybrWIGETJXe4yJr1gXVNZ5JcHzQpsZb9GhYXu2DhTN0HBxsah/z/naq7GJ16frPp4gY3YEFjLVVUPLvh7wgX odl_user@cc-ba677cc2-86464c7797-9tpvc"'
+        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQxQD83QQsrYoCc45LtgjhysHvQaC60ieE8UXPBtNFxNiujahjoWFl7VkK51kTrpuA5t+yKaUsdFSi+oSUvdEDClZH/M8J7OQ2Me0YptfbnAsPP4GcTEgthDFTI4iIwyBViZFXp7I/F+DZ/8g5o/z4am8EQP1MrumpwP0tzrt0BDISwjV43TLk3qmFTUUi2F2ylTA1SyJLYowFGZlnULD4vhnoEFQnbW0BZ5D32CSNOBM1kh5pA9ZB07l3MI65W7LY1nzQERYo0lIA0Utlkm8mexMw8F4ehYIWLOHslW4bWwW0n1XNMvt9qi4j4v+39ccsnFPZG5nmHw0R6AWaQNBH odl_user@cc-a7d05785-75fdfd5d54-prnn8"'
         environmentServiceNameAzureRM: myserviceconnection12312
 
     - task: TerraformTaskV1@0
@@ -55,7 +55,7 @@ stages:
       inputs:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDf6GlXttxn6GQthm3uOL4Z9UNFFTJTGXIKSfHvVVZx/OH4ZEVoYOOfvc1uTFDp4vMRFYl8FGvaN2hLUk0wbHDWI+Z8640OoKm2yfbavR9uF1K0Dgn/UhdrBS8qR0uQJptnBJfm/05IKpIMRvJBveDWgvqd9wlMr1RrxPsg6bQaJL+Qy+NKalfOLlCgxLP6npFt58h+URQnMVPRl3eO87HDRmREDsZEVM0H4GFDYJV3Z9j9pVWMaFlBPlAxC9JDFIpXybrWIGETJXe4yJr1gXVNZ5JcHzQpsZb9GhYXu2DhTN0HBxsah/z/naq7GJ16frPp4gY3YEFjLVVUPLvh7wgX odl_user@cc-ba677cc2-86464c7797-9tpvc"'
+        commandOptions: '-var "public_key_path=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQxQD83QQsrYoCc45LtgjhysHvQaC60ieE8UXPBtNFxNiujahjoWFl7VkK51kTrpuA5t+yKaUsdFSi+oSUvdEDClZH/M8J7OQ2Me0YptfbnAsPP4GcTEgthDFTI4iIwyBViZFXp7I/F+DZ/8g5o/z4am8EQP1MrumpwP0tzrt0BDISwjV43TLk3qmFTUUi2F2ylTA1SyJLYowFGZlnULD4vhnoEFQnbW0BZ5D32CSNOBM1kh5pA9ZB07l3MI65W7LY1nzQERYo0lIA0Utlkm8mexMw8F4ehYIWLOHslW4bWwW0n1XNMvt9qi4j4v+39ccsnFPZG5nmHw0R6AWaQNBH odl_user@cc-a7d05785-75fdfd5d54-prnn8"'
         environmentServiceNameAzureRM: myserviceconnection12312
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
